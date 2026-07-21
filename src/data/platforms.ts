@@ -20,6 +20,8 @@ export interface Platform {
   description: string;
   apiType: string;
   homepage: string;
+  /** 搜索 URL 模板，{q} 会被替换为热搜标题 */
+  searchUrl: string;
   /** 短英文标签用于徽章 */
   badge: string;
 }
@@ -34,6 +36,7 @@ export const PLATFORMS: Platform[] = [
     description: "新浪微博实时热搜榜单",
     apiType: "weibo",
     homepage: "https://s.weibo.com/top/summary",
+    searchUrl: "https://s.weibo.com/weibo?q={q}",
     badge: "WB",
   },
   {
@@ -45,6 +48,7 @@ export const PLATFORMS: Platform[] = [
     description: "知乎热门话题榜",
     apiType: "zhihu",
     homepage: "https://www.zhihu.com/hot",
+    searchUrl: "https://www.zhihu.com/search?type=content&q={q}",
     badge: "ZH",
   },
   {
@@ -56,6 +60,7 @@ export const PLATFORMS: Platform[] = [
     description: "哔哩哔哩综合热门",
     apiType: "bilibili",
     homepage: "https://www.bilibili.com/v/popular/all",
+    searchUrl: "https://search.bilibili.com/all?keyword={q}",
     badge: "BL",
   },
   {
@@ -67,6 +72,7 @@ export const PLATFORMS: Platform[] = [
     description: "抖音实时热榜",
     apiType: "douyin",
     homepage: "https://www.douyin.com/hot",
+    searchUrl: "https://www.douyin.com/search/{q}",
     badge: "DY",
   },
   {
@@ -78,6 +84,7 @@ export const PLATFORMS: Platform[] = [
     description: "快手实时热榜",
     apiType: "kuaishou",
     homepage: "https://www.kuaishou.com/",
+    searchUrl: "https://www.kuaishou.com/search/video?searchKey={q}",
     badge: "KS",
   },
   {
@@ -89,6 +96,7 @@ export const PLATFORMS: Platform[] = [
     description: "百度热搜实时榜单",
     apiType: "baidu",
     homepage: "https://top.baidu.com/board?tab=realtime",
+    searchUrl: "https://www.baidu.com/s?wd={q}",
     badge: "BD",
   },
   {
@@ -100,6 +108,7 @@ export const PLATFORMS: Platform[] = [
     description: "今日头条实时热榜",
     apiType: "toutiao",
     homepage: "https://www.toutiao.com/hot-event/hot-board/",
+    searchUrl: "https://so.toutiao.com/search?keyword={q}",
     badge: "TT",
   },
   {
@@ -111,6 +120,7 @@ export const PLATFORMS: Platform[] = [
     description: "网易新闻热点榜",
     apiType: "wangyi",
     homepage: "https://m.163.com/qq/",
+    searchUrl: "https://www.163.com/search?keyword={q}",
     badge: "WY",
   },
   {
@@ -122,6 +132,7 @@ export const PLATFORMS: Platform[] = [
     description: "斗鱼直播热度榜",
     apiType: "douyu",
     homepage: "https://www.douyu.com/directory/rank_list/game",
+    searchUrl: "https://www.douyu.com/search/?kw={q}",
     badge: "DY2",
   },
   {
@@ -133,6 +144,7 @@ export const PLATFORMS: Platform[] = [
     description: "百度贴吧热议榜",
     apiType: "tieba",
     homepage: "https://tieba.baidu.com/hottopic/browse/topicList",
+    searchUrl: "https://tieba.baidu.com/f?kw={q}",
     badge: "TB",
   },
 ];
@@ -152,3 +164,10 @@ export const PLATFORM_CATEGORY_LABEL: Record<Platform["category"], string> = {
   community: "社区论坛",
   live: "直播平台",
 };
+
+/** 根据平台 ID 和热搜标题生成跳转 URL（编码后） */
+export function buildPlatformSearchUrl(platformId: PlatformId, title: string): string {
+  const platform = PLATFORM_MAP[platformId];
+  if (!platform) return "#";
+  return platform.searchUrl.replace("{q}", encodeURIComponent(title));
+}

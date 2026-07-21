@@ -1,4 +1,4 @@
-import { PLATFORM_MAP } from "../data/platforms";
+import { PLATFORM_MAP, buildPlatformSearchUrl } from "../data/platforms";
 import type { PlatformId } from "../data/platforms";
 import type { FetchResult, HotSearchItem, PlatformHotList } from "../data/types";
 import { buildDemoList } from "../data/mockData";
@@ -74,13 +74,17 @@ function parseImsyy(
   const platform = PLATFORM_MAP[platformId];
   const items: HotSearchItem[] = json.data.map((raw, i) => {
     const { hot, label } = formatHot(raw.hot ?? 0);
+    const title = raw.title ?? "";
+    // 优先使用接口返回 url，否则回退到平台搜索页
+    const rawUrl = raw.url || raw.mobileUrl || "";
+    const url = rawUrl && rawUrl !== "#" ? rawUrl : buildPlatformSearchUrl(platformId, title);
     return {
       id: `${platformId}-${i + 1}`,
-      title: raw.title ?? "",
+      title,
       desc: raw.desc ?? "",
       hot,
       hotLabel: label,
-      url: raw.url || raw.mobileUrl || "#",
+      url,
       index: raw.index ?? i + 1,
       cover: raw.cover,
     };
@@ -118,12 +122,15 @@ function parseVvhan(
   const platform = PLATFORM_MAP[platformId];
   const items: HotSearchItem[] = json.data.map((raw, i) => {
     const { hot, label } = formatHot(raw.hot ?? 0);
+    const title = raw.title ?? "";
+    const rawUrl = raw.url || raw.mobil_url || "";
+    const url = rawUrl && rawUrl !== "#" ? rawUrl : buildPlatformSearchUrl(platformId, title);
     return {
       id: `${platformId}-${i + 1}`,
-      title: raw.title ?? "",
+      title,
       hot,
       hotLabel: label,
-      url: raw.url || raw.mobil_url || "#",
+      url,
       index: raw.index ?? i + 1,
     };
   });
@@ -183,11 +190,11 @@ export async function fetchPlatformHotList(
   try {
     const data = await fetchPrimary(platformId);
     return { data, source: "live" };
-  } catch (primaryErr) {
+  } catch {
     try {
       const data = await fetchSecondary(platformId);
       return { data, source: "live" };
-    } catch (secondaryErr) {
+    } catch {
       // 终回退：演示数据
       const platform = PLATFORM_MAP[platformId];
       const data = buildDemoList(platformId, platform.name);

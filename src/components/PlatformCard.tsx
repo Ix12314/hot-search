@@ -91,9 +91,16 @@ export function PlatformCard({
                 className="group/item flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-ink-50 transition-colors"
               >
                 <RankBadge rank={item.index} size="sm" />
-                <span className="flex-1 truncate text-[13px] text-ink-700 group-hover/item:text-ink-900">
-                  {item.title}
-                </span>
+                <div className="flex-1 min-w-0">
+                  <span className="block truncate text-[13px] text-ink-700 group-hover/item:text-ink-900">
+                    {item.title}
+                  </span>
+                  {item.desc && (
+                    <span className="block truncate text-2xs text-ink-400 mt-0.5">
+                      {item.desc}
+                    </span>
+                  )}
+                </div>
                 <HeatBadge
                   label={item.hotLabel}
                   hot={item.hot}

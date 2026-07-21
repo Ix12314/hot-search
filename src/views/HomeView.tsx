@@ -146,6 +146,11 @@ export function HomeView({
                   <h3 className="text-[15px] font-medium text-ink-900 leading-snug line-clamp-2 group-hover:text-flame-600 transition-colors">
                     {item.title}
                   </h3>
+                  {item.desc && (
+                    <p className="text-2xs text-ink-400 mt-2 line-clamp-2 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  )}
                 </div>
               </a>
             ))}

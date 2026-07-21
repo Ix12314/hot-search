@@ -47,8 +47,14 @@ export function HotSearchRow({
             </span>
           )}
         </div>
-        {isDetailed && item.desc && (
-          <p className="text-xs text-ink-400 mt-1 line-clamp-1">{item.desc}</p>
+        {item.desc && (
+          <p
+            className={`text-ink-400 mt-1 line-clamp-1 ${
+              isDetailed ? "text-xs" : "text-2xs"
+            }`}
+          >
+            {item.desc}
+          </p>
         )}
       </div>
       <div className="shrink-0">
@@ -69,29 +75,18 @@ export function HotSearchRow({
     </>
   );
 
-  if (item.url && item.url !== "#") {
-    return (
-      <a
-        href={item.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`group flex items-center gap-3 transition-all ${
-          isDetailed
-            ? "px-5 py-3.5 hover:bg-flame-50/40"
-            : "px-3 py-2.5 hover:bg-ink-50"
-        } rounded-lg`}
-      >
-        {content}
-      </a>
-    );
-  }
   return (
-    <div
-      className={`group flex items-center gap-3 ${
-        isDetailed ? "px-5 py-3.5" : "px-3 py-2.5"
-      }`}
+    <a
+      href={item.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`group flex items-center gap-3 transition-all ${
+        isDetailed
+          ? "px-5 py-3.5 hover:bg-flame-50/40"
+          : "px-3 py-2.5 hover:bg-ink-50"
+      } rounded-lg`}
     >
       {content}
-    </div>
+    </a>
   );
 }
